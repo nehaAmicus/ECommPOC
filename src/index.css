@@ -1,0 +1,124 @@
+@import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #0f172a;
+  background: #f8fafc;
+  --page-bg: #f8fafc;
+  --panel-bg: #ffffff;
+  --panel-alt: #f8fafc;
+  --text-color: #0f172a;
+  --muted-color: #475569;
+  --border-color: #e2e8f0;
+  --input-bg: #ffffff;
+  --input-text: #0f172a;
+  --shadow-color: rgba(15, 23, 42, 0.08);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html[data-theme='dark'] {
+  --page-bg: #020817;
+  --panel-bg: #0f172a;
+  --panel-alt: #111827;
+  --text-color: #e2e8f0;
+  --muted-color: #cbd5e1;
+  --border-color: #334155;
+  --input-bg: #0b1120;
+  --input-text: #e2e8f0;
+  --shadow-color: rgba(15, 23, 42, 0.5);
+}
+
+html {
+  background: var(--page-bg);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--page-bg);
+  color: var(--text-color);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+html[data-theme='dark'] .bg-white,
+html[data-theme='dark'] .bg-slate-50,
+html[data-theme='dark'] .bg-slate-100,
+html[data-theme='dark'] .bg-sky-50,
+html[data-theme='dark'] .bg-emerald-50,
+html[data-theme='dark'] .bg-red-50,
+html[data-theme='dark'] .bg-amber-50,
+html[data-theme='dark'] .bg-slate-200,
+html[data-theme='dark'] .bg-slate-300 {
+  background-color: var(--panel-alt) !important;
+}
+
+html[data-theme='dark'] .border-slate-200,
+html[data-theme='dark'] .border-slate-300,
+html[data-theme='dark'] .border-slate-400,
+html[data-theme='dark'] .border-sky-200,
+html[data-theme='dark'] .border-red-200,
+html[data-theme='dark'] .border-amber-200,
+html[data-theme='dark'] .border-sky-300,
+html[data-theme='dark'] .border-red-300 {
+  border-color: var(--border-color) !important;
+}
+
+html[data-theme='dark'] .text-slate-900,
+html[data-theme='dark'] .text-slate-800,
+html[data-theme='dark'] .text-slate-700,
+html[data-theme='dark'] .text-slate-600,
+html[data-theme='dark'] .text-slate-500,
+html[data-theme='dark'] .text-slate-400 {
+  color: var(--text-color) !important;
+}
+
+html[data-theme='dark'] .text-slate-600,
+html[data-theme='dark'] .text-slate-500,
+html[data-theme='dark'] .text-slate-400 {
+  color: var(--muted-color) !important;
+}
+
+html[data-theme='dark'] input,
+html[data-theme='dark'] select,
+html[data-theme='dark'] textarea {
+  background-color: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  border-color: var(--border-color) !important;
+}
+
+html[data-theme='dark'] input::placeholder,
+html[data-theme='dark'] textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+html[data-theme='dark'] .shadow-sm,
+html[data-theme='dark'] .shadow-xl {
+  box-shadow: 0 1px 2px 0 var(--shadow-color) !important;
+}
+:root {
+  --button-bg: #0f172a;
+  --button-bg-hover: #1e293b;
+  --button-text: #ffffff;
+}
+
+html[data-theme='dark'] {
+  --button-bg: #1e293b;
+  --button-bg-hover: #334155;
+  --button-text: #f8fafc;
+}
