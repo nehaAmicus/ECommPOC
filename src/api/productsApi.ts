@@ -24,6 +24,9 @@ export const productsApi = createApi({
         order?: 'asc' | 'desc'
       }
     >({
+      serializeQueryArgs: ({ queryArgs }) => {
+        return queryArgs
+      },
       queryFn: async ({
         limit = 10,
         skip = 0,
@@ -123,12 +126,11 @@ export const productsApi = createApi({
           const items = payload.products ?? []
           const filteredItems = filterItems(items)
           const sortedItems = sortItems(filteredItems)
-          const paginatedItems = sortedItems.slice(skip, skip + limit)
 
           return {
             data: {
-              products: paginatedItems,
-              total: filteredItems.length || payload.total || 0,
+              products: sortedItems,
+              total: payload.total || filteredItems.length || 0,
               skip,
               limit,
             },
