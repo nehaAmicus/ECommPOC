@@ -27,6 +27,7 @@ export function Products() {
   const location = useLocation()
   const [searchParams, setSearchParams] = useSearchParams()
   const compareIds = useAppSelector((state) => state.compare.items)
+  const demoProducts = useAppSelector((state) => state.demoProducts.items)
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
   const [toastMessage, setToastMessage] = useState<string | null>(null)
   const search = searchParams.get('search') ?? ''
@@ -50,6 +51,30 @@ export function Products() {
     sortBy,
     order,
   })
+
+  const matchingDemoProducts = useMemo(() => {
+    const normalizedSearch = debouncedSearch.toLowerCase().trim()
+
+    return demoProducts.filter((product) => {
+      const matchesCategory = !category || product.category === category
+      const matchesSearch =
+        !normalizedSearch ||
+        [product.title, product.description, product.brand, product.category]
+          .join(' ')
+          .toLowerCase()
+          .includes(normalizedSearch)
+
+      return matchesCategory && matchesSearch
+    })
+  }, [category, debouncedSearch, demoProducts])
+
+  const displayedProducts = useMemo(() => {
+    if (!data) {
+      return matchingDemoProducts
+    }
+
+    return page === 1 ? [...matchingDemoProducts, ...data.products] : data.products
+  }, [data, matchingDemoProducts, page])
 
   const totalPages = useMemo(
     () => (data ? Math.max(1, Math.ceil(data.total / PRODUCTS_PER_PAGE)) : 1),
@@ -286,16 +311,16 @@ export function Products() {
         </div>
       )}
 
-      {!isLoading && !isError && data && data.products.length === 0 && (
+      {!isLoading && !isError && data && displayedProducts.length === 0 && (
         <div className="rounded-lg border border-slate-200 bg-white p-8 text-center text-slate-600">
           No products match your filters.
         </div>
       )}
 
-      {!isLoading && !isError && data && data.products.length > 0 && (
+      {!isLoading && !isError && data && displayedProducts.length > 0 && (
         <>
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-            {data.products.map((product) => (
+            {displayedProducts.map((product) => (
               <Link key={product.id} to={`/products/${product.id}`} className="block">
                 <ProductCard product={product} onAddToCart={handleAddToCartToast} />
               </Link>

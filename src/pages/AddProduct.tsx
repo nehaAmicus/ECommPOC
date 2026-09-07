@@ -1,3 +1,4 @@
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { useAddProductMutation } from '../api/productsApi'
@@ -7,9 +8,11 @@ import {
   type ProductFormValues,
   defaultProductFormValues,
 } from '../components/ProductFormWizard'
+import { addDemoProduct } from '../store/demoProductsSlice'
 
 export function AddProduct() {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const [addProduct, { isLoading, isError, error }] = useAddProductMutation()
 
   const handleSubmit = async (values: ProductFormValues) => {
@@ -36,7 +39,19 @@ export function AddProduct() {
     }
 
     try {
-      await addProduct(productPayload).unwrap()
+      const createdProduct = await addProduct(productPayload).unwrap()
+      dispatch(
+        addDemoProduct({
+          ...createdProduct,
+          discountPercentage: createdProduct.discountPercentage ?? 0,
+          rating: createdProduct.rating ?? 0,
+          stock: createdProduct.stock ?? 0,
+          thumbnail:
+            createdProduct.thumbnail ??
+            `https://placehold.co/640x480/e2e8f0/334155?text=${encodeURIComponent(createdProduct.title)}`,
+          images: createdProduct.images ?? [],
+        }),
+      )
 
       navigate('/products', {
         replace: true,
