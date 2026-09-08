@@ -330,7 +330,8 @@ export function ProductFormWizard({
 
             {isLastStep ? (
               <button
-                type="submit"
+                type="button"
+                onClick={form.handleSubmit(onSubmit)}
                 disabled={isLoading}
                 className="rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
               >
