@@ -197,10 +197,10 @@ export function Products() {
         </div>
       )}
 
-      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Products</h1>
-          <p className="mt-1 text-sm text-slate-600">
+      <div className="mb-6 space-y-4">
+        <div className="flex flex-col gap-2 sm:gap-3">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900">Products</h1>
+          <p className="text-xs sm:text-sm text-slate-600">
             Browse the live catalog from the public DummyJSON API.
           </p>
         </div>
@@ -208,25 +208,25 @@ export function Products() {
         <button
           type="button"
           onClick={handleAddProductClick}
-          className="inline-flex h-[42px] shrink-0 items-center justify-center whitespace-nowrap rounded-lg bg-sky-600 px-10 text-sm font-medium text-white shadow-sm transition hover:bg-sky-500"
+          className="w-full sm:w-auto inline-flex h-[42px] shrink-0 items-center justify-center whitespace-nowrap rounded-lg bg-sky-600 px-4 sm:px-10 text-xs sm:text-sm font-medium text-white shadow-sm transition hover:bg-sky-500"
         >
           + Add Product
         </button>
 
-        <div className="flex w-full max-w-3xl items-center gap-3">
+        <div className="flex flex-col sm:flex-row w-full gap-3">
           <input
             type="search"
             value={search}
             onChange={(event) => handleSearchChange(event.target.value)}
             placeholder="Search products"
-            className="h-[42px] w-full rounded-lg border border-slate-300 bg-white px-4 text-sm text-slate-900 shadow-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+            className="h-[42px] w-full rounded-lg border border-slate-300 bg-white px-4 text-xs sm:text-sm text-slate-900 shadow-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
           />
 
           <select
             aria-label="Sort products"
             value={selectedSort.label}
             onChange={(event) => handleSortChange(event.target.value)}
-            className="h-[42px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+            className="h-[42px] w-full sm:w-auto rounded-lg border border-slate-300 bg-white px-3 text-xs sm:text-sm text-slate-900 shadow-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
           >
             {sortOptions.map((option) => (
               <option key={`${option.label}-${option.value || 'default'}`} value={option.label}>
@@ -319,7 +319,12 @@ export function Products() {
 
       {!isLoading && !isError && data && displayedProducts.length > 0 && (
         <>
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-4 sm:gap-6 
+            grid-cols-1         
+            sm:grid-cols-2      
+            md:grid-cols-3      
+            lg:grid-cols-4      
+            xl:grid-cols-5">
             {displayedProducts.map((product) => (
               <Link key={product.id} to={`/products/${product.id}`} className="block">
                 <ProductCard product={product} onAddToCart={handleAddToCartToast} />

@@ -16,10 +16,10 @@ export function CartSummary({
   //onDeleteCart,
 }: CartSummaryProps) {
   return (
-    <aside className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-slate-900">Summary</h2>
+    <aside className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm">
+      <h2 className="text-base sm:text-lg font-semibold text-slate-900">Summary</h2>
 
-      <div className="mt-4 space-y-3 text-sm text-slate-600">
+      <div className="mt-4 space-y-3 text-xs sm:text-sm text-slate-600">
         <div className="flex items-center justify-between">
           <span>Items</span>
           <span>{totalItems}</span>
@@ -35,7 +35,7 @@ export function CartSummary({
           type="button"
           onClick={onClearCart}
           disabled={isClearing || isDeleting}
-          className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-400 disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-medium text-slate-700 transition hover:border-slate-400 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isClearing ? 'Clearing cart...' : 'Clear cart'}
         </button>

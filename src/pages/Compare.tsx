@@ -67,14 +67,14 @@ export function Compare() {
           description="Compare products side by side."
           robots="noindex,nofollow"
         />
-        <div className="mx-auto max-w-4xl p-6">
-          <div className="rounded-2xl border border-slate-200 bg-white p-10 text-center shadow-sm">
-            <h1 className="text-2xl font-bold text-slate-900">No products selected</h1>
-            <p className="mt-2 text-sm text-slate-600">Choose up to three products to compare their specifications.</p>
+        <div className="mx-auto max-w-4xl p-4 sm:p-6">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-10 text-center shadow-sm">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900">No products selected</h1>
+            <p className="mt-2 text-xs sm:text-sm text-slate-600">Choose up to three products to compare their specifications.</p>
             <button
               type="button"
               onClick={() => navigate('/products')}
-              className="mt-5 rounded-lg bg-sky-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-sky-500"
+              className="mt-5 rounded-lg bg-sky-600 px-4 py-2.5 text-xs sm:text-sm font-medium text-white transition hover:bg-sky-500"
             >
               Browse products
             </button>
@@ -92,41 +92,41 @@ export function Compare() {
         robots="noindex,nofollow"
       />
 
-      <div className="mx-auto max-w-7xl p-6">
-        <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Compare products</h1>
-          <p className="mt-1 text-sm text-slate-600">Side-by-side specs for your selected items.</p>
-        </div>
+      <div className="mx-auto max-w-7xl p-4 sm:p-6">
+        <div className="mb-6 flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900">Compare products</h1>
+            <p className="mt-1 text-xs sm:text-sm text-slate-600">Side-by-side specs for your selected items.</p>
+          </div>
 
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => dispatch(clearCompare())}
-            className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-400"
-          >
-            Clear comparison
-          </button>
-          <Link
-            to="/products"
-            className="rounded-lg bg-sky-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-sky-500"
-          >
-            Back to products
-          </Link>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+            <button
+              type="button"
+              onClick={() => dispatch(clearCompare())}
+              className="w-full sm:w-auto rounded-lg border border-slate-300 bg-white px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-medium text-slate-700 transition hover:border-slate-400"
+            >
+              Clear comparison
+            </button>
+            <Link
+              to="/products"
+              className="w-full sm:w-auto rounded-lg bg-sky-600 px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-medium text-white transition hover:bg-sky-500 text-center"
+            >
+              Back to products
+            </Link>
+          </div>
         </div>
-      </div>
 
         <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
           <table className="min-w-full border-collapse">
             <thead>
               <tr>
-                <th className="border-b border-slate-200 bg-slate-50 p-4 text-left text-sm font-semibold text-slate-700">Feature</th>
+                <th className="border-b border-slate-200 bg-slate-50 p-3 sm:p-4 text-left text-xs sm:text-sm font-semibold text-slate-700">Feature</th>
                 {products.map((product) => (
-                  <th key={product.id} className="border-b border-l border-slate-200 bg-slate-50 p-4 text-left align-top">
-                    <Link to={`/products/${product.id}`} className="block text-base font-semibold text-sky-700 hover:text-sky-800">
+                  <th key={product.id} className="border-b border-l border-slate-200 bg-slate-50 p-3 sm:p-4 text-left align-top">
+                    <Link to={`/products/${product.id}`} className="block text-sm sm:text-base font-semibold text-sky-700 hover:text-sky-800 line-clamp-2">
                       {product.title}
                     </Link>
-                    <p className="mt-1 text-sm text-slate-500">{product.brand}</p>
+                    <p className="mt-1 text-xs sm:text-sm text-slate-500">{product.brand}</p>
                   </th>
                 ))}
               </tr>
@@ -135,11 +135,11 @@ export function Compare() {
             <tbody>
               {compareFields.map((field) => (
                 <tr key={field.key} className="align-top">
-                  <td className="border-b border-slate-200 bg-slate-50 p-4 text-sm font-semibold text-slate-700">
+                  <td className="border-b border-slate-200 bg-slate-50 p-3 sm:p-4 text-xs sm:text-sm font-semibold text-slate-700">
                     {field.label}
                   </td>
                   {products.map((product) => (
-                    <td key={`${field.key}-${product.id}`} className="border-b border-l border-slate-200 p-4 text-sm text-slate-700">
+                    <td key={`${field.key}-${product.id}`} className="border-b border-l border-slate-200 p-3 sm:p-4 text-xs sm:text-sm text-slate-700">
                       {renderValue(field.key, product)}
                     </td>
                   ))}

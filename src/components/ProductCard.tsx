@@ -53,9 +53,9 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   }
 
   return (
-    <article className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-      <div className="flex items-start justify-between gap-3">
-        <span className="rounded-full bg-slate-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-600">
+    <article className="flex flex-col rounded-lg border border-slate-200 bg-white p-3 sm:p-4 shadow-sm hover:shadow-md transition">
+      <div className="flex items-start justify-between gap-2 sm:gap-3">
+        <span className="rounded-full bg-slate-100 px-2 py-1 text-[9px] sm:text-[10px] font-semibold uppercase tracking-wide text-slate-600">
           {product.category}
         </span>
 
@@ -63,7 +63,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           type="button"
           onClick={toggleCompare}
           disabled={isMaxReached}
-          className={`rounded-full border px-2.5 py-1 text-xs font-medium transition ${
+          className={`rounded-full border px-2 sm:px-2.5 py-1 text-xs font-medium transition whitespace-nowrap ${
             isSelected
               ? 'border-sky-600 bg-sky-100 text-sky-700'
               : isMaxReached
@@ -75,19 +75,19 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         </button>
       </div>
 
-      <img src={product.thumbnail} alt={product.title} className="mt-4 h-40 w-full rounded-md object-cover" />
-      <div className="mt-4 space-y-2">
-        <h2 className="truncate text-lg font-semibold text-slate-900">{product.title}</h2>
+      <img src={product.thumbnail} alt={product.title} className="mt-3 sm:mt-4 aspect-square w-full rounded-md object-cover" />
+      <div className="mt-3 sm:mt-4 flex-1 space-y-2">
+        <h2 className="line-clamp-2 text-sm sm:text-base font-semibold text-slate-900">{product.title}</h2>
         {/* <p className="text-sm text-slate-600">{product.brand}</p> */}
         <div className="flex items-center justify-between">
-          <span className="text-lg font-bold text-slate-900">${product.price}</span>
+          <span className="text-base sm:text-lg font-bold text-slate-900">${product.price}</span>
           <span className="text-xs text-emerald-600">{product.stock} in stock</span>
         </div>
 
         <button
           type="button"
           onClick={handleAddToCart}
-          className="mt-3 w-full rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
+          className="mt-3 w-full rounded-lg bg-slate-900 px-3 py-2.5 sm:py-2 text-xs sm:text-sm font-medium text-white transition hover:bg-slate-800"
           style={{
             backgroundColor: 'var(--button-bg)',
             color: 'var(--button-text)',

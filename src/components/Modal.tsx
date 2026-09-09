@@ -13,11 +13,11 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4">
-      <div className="w-full max-w-lg rounded-lg bg-white p-6 shadow-xl">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-900">{title ?? 'Modal'}</h2>
-          <button type="button" onClick={onClose} className="text-sm text-slate-500">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-3 sm:p-4">
+      <div className="w-full max-w-sm sm:max-w-md md:max-w-lg rounded-lg bg-white p-4 sm:p-6 shadow-xl">
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <h2 className="text-base sm:text-lg font-semibold text-slate-900">{title ?? 'Modal'}</h2>
+          <button type="button" onClick={onClose} className="text-xs sm:text-sm text-slate-500 whitespace-nowrap">
             Close
           </button>
         </div>

@@ -107,18 +107,18 @@ export function ProductFormWizard({
   return (
     <div className="mx-auto max-w-3xl p-6">
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="mb-6 flex items-center justify-between gap-4">
+        <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <p className="text-sm font-medium uppercase tracking-wide text-sky-600">{subtitle}</p>
-            <h1 className="mt-1 text-2xl font-bold text-slate-900">{title}</h1>
+            <p className="text-xs sm:text-sm font-medium uppercase text-sky-600">{subtitle}</p>
+            <h1 className="mt-1 text-xl sm:text-2xl font-bold text-slate-900">{title}</h1>
           </div>
 
-          <div className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
+          <div className="rounded-full bg-slate-100 px-3 py-1 text-xs sm:text-sm font-medium text-slate-700 whitespace-nowrap">
             Step {currentStepIndex + 1} / {steps.length}
           </div>
         </div>
 
-        <div className="mb-6 grid grid-cols-4 gap-2">
+        <div className="mb-6 grid grid-cols-2 sm:grid-cols-4 gap-2">
           {steps.map((step, index) => (
             <div
               key={step.title}
@@ -128,7 +128,9 @@ export function ProductFormWizard({
                   : 'border-slate-200 bg-slate-50 text-slate-500'
               }`}
             >
-              {step.title}
+              {/* Show number on mobile, full title on tablet+ */}
+              <span className="sm:hidden">{index + 1}</span>
+              <span className="hidden sm:inline">{step.title}</span>
             </div>
           ))}
         </div>
@@ -225,9 +227,9 @@ export function ProductFormWizard({
 
           {currentStepIndex === 2 && (
             <div className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 <div>
-                  <label htmlFor="width" className="mb-1 block text-sm font-medium text-slate-700">
+                  <label htmlFor="width" className="mb-1 block text-xs sm:text-sm font-medium text-slate-700">
                     Width
                   </label>
                   <input
@@ -236,15 +238,15 @@ export function ProductFormWizard({
                     min="0"
                     step="0.01"
                     {...form.register('width', { valueAsNumber: true })}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                    className="w-full px-3 py-2 sm:py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
                   />
                   {form.formState.errors.width && (
-                    <p className="mt-2 text-sm text-red-600">{form.formState.errors.width.message}</p>
+                    <p className="mt-2 text-xs text-red-600">{form.formState.errors.width.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label htmlFor="height" className="mb-1 block text-sm font-medium text-slate-700">
+                  <label htmlFor="height" className="mb-1 block text-xs sm:text-sm font-medium text-slate-700">
                     Height
                   </label>
                   <input
@@ -253,17 +255,15 @@ export function ProductFormWizard({
                     min="0"
                     step="0.01"
                     {...form.register('height', { valueAsNumber: true })}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                    className="w-full px-3 py-2 sm:py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
                   />
                   {form.formState.errors.height && (
-                    <p className="mt-2 text-sm text-red-600">{form.formState.errors.height.message}</p>
+                    <p className="mt-2 text-xs text-red-600">{form.formState.errors.height.message}</p>
                   )}
                 </div>
-              </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
                 <div>
-                  <label htmlFor="depth" className="mb-1 block text-sm font-medium text-slate-700">
+                  <label htmlFor="depth" className="mb-1 block text-xs sm:text-sm font-medium text-slate-700">
                     Depth
                   </label>
                   <input
@@ -272,27 +272,27 @@ export function ProductFormWizard({
                     min="0"
                     step="0.01"
                     {...form.register('depth', { valueAsNumber: true })}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                    className="w-full px-3 py-2 sm:py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
                   />
                   {form.formState.errors.depth && (
-                    <p className="mt-2 text-sm text-red-600">{form.formState.errors.depth.message}</p>
+                    <p className="mt-2 text-xs text-red-600">{form.formState.errors.depth.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label htmlFor="unit" className="mb-1 block text-sm font-medium text-slate-700">
+                  <label htmlFor="unit" className="mb-1 block text-xs sm:text-sm font-medium text-slate-700">
                     Unit
                   </label>
                   <select
                     id="unit"
                     {...form.register('unit')}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                    className="w-full px-3 py-2 sm:py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
                   >
                     <option value="cm">cm</option>
                     <option value="in">in</option>
                   </select>
                   {form.formState.errors.unit && (
-                    <p className="mt-2 text-sm text-red-600">{form.formState.errors.unit.message}</p>
+                    <p className="mt-2 text-xs text-red-600">{form.formState.errors.unit.message}</p>
                   )}
                 </div>
               </div>
@@ -318,22 +318,21 @@ export function ProductFormWizard({
             </div>
           )}
 
-          <div className="flex items-center justify-between gap-3 border-t border-slate-200 pt-5">
+          <div className="flex flex-col-reverse sm:flex-row gap-3 border-t border-slate-200 pt-5">
             <button
               type="button"
               onClick={previousStep}
               disabled={currentStepIndex === 0 || isLoading}
-              className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-400 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex-1 rounded-lg border border-slate-300 bg-white px-4 py-3 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-700 transition hover:border-slate-400 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Back
             </button>
 
             {isLastStep ? (
               <button
-                type="button"
-                onClick={form.handleSubmit(onSubmit)}
+                type="submit"
                 disabled={isLoading}
-                className="rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex-1 rounded-lg bg-slate-900 px-4 py-3 sm:py-2.5 text-xs sm:text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isLoading ? submitLoadingLabel : submitLabel}
               </button>
@@ -342,7 +341,7 @@ export function ProductFormWizard({
                 type="button"
                 onClick={nextStep}
                 disabled={isLoading}
-                className="rounded-lg bg-sky-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-sky-500 disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex-1 rounded-lg bg-sky-600 px-4 py-3 sm:py-2.5 text-xs sm:text-sm font-medium text-white transition hover:bg-sky-500 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Next
               </button>
