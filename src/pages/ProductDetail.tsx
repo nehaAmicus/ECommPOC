@@ -149,36 +149,36 @@ export function ProductDetail() {
         canonical={`/products/${product.id}`}
       />
 
-      <div className="mx-auto max-w-5xl p-6">
-        <Link to="/products" className="mb-6 inline-block text-sm font-medium text-sky-600 hover:text-sky-700">
+      <div className="mx-auto max-w-5xl p-4 sm:p-6">
+        <Link to="/products" className="mb-6 inline-block text-xs sm:text-sm font-medium text-sky-600 hover:text-sky-700">
           ← Back to products
         </Link>
 
         {toastMessage && (
-          <div className="fixed bottom-6 right-6 z-50 rounded-lg bg-slate-900 px-3.5 py-2 text-sm font-medium text-white shadow-lg">
+          <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 rounded-lg bg-slate-900 px-3.5 py-2 text-xs sm:text-sm font-medium text-white shadow-lg">
             {toastMessage}
           </div>
         )}
 
         {showDeleteConfirm && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
-            <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-xl">
-              <h2 className="text-xl font-bold text-slate-900">Delete product?</h2>
-              <p className="mt-3 text-sm leading-6 text-slate-600">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-3 sm:p-4">
+            <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-xl">
+              <h2 className="text-lg sm:text-xl font-bold text-slate-900">Delete product?</h2>
+              <p className="mt-3 text-xs sm:text-sm leading-6 text-slate-600">
                 This will simulate a delete request to DummyJSON. The API does not permanently remove the product from its demo dataset.
               </p>
 
               {isDeleteError && (
-                <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-xs sm:text-sm text-red-700">
                   {(deleteError as { data?: { message?: string } })?.data?.message ?? 'Delete failed.'}
                 </div>
               )}
 
-              <div className="mt-6 flex justify-end gap-3">
+              <div className="mt-6 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
                 <button
                   type="button"
                   onClick={() => setShowDeleteConfirm(false)}
-                  className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-400"
+                  className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-medium text-slate-700 transition hover:border-slate-400"
                 >
                   Cancel
                 </button>
@@ -186,7 +186,7 @@ export function ProductDetail() {
                   type="button"
                   onClick={handleDeleteProduct}
                   disabled={isDeletingProduct}
-                  className="rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="rounded-lg bg-red-600 px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-medium text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isDeletingProduct ? 'Deleting...' : 'Delete'}
                 </button>
@@ -196,21 +196,21 @@ export function ProductDetail() {
         )}
 
         <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="grid gap-6 p-6 md:grid-cols-2">
+          <div className="grid gap-4 sm:gap-6 p-4 sm:p-6 grid-cols-1 md:grid-cols-2">
             <div>
               <img
                 src={product.thumbnail}
                 alt={product.title}
-                className="h-96 w-full rounded-xl object-cover"
+                className="w-full aspect-square rounded-xl object-cover"
               />
 
-              <div className="mt-4 grid grid-cols-4 gap-2">
+              <div className="mt-3 sm:mt-4 grid grid-cols-4 gap-2">
                 {product.images.slice(0, 4).map((image, index) => (
                   <img
                     key={`${product.id}-${index}`}
                     src={image}
                     alt={`${product.title} view ${index + 1}`}
-                    className="h-20 w-full rounded-md object-cover"
+                    className="h-16 sm:h-20 w-full rounded-md object-cover"
                   />
                 ))}
               </div>
@@ -221,30 +221,30 @@ export function ProductDetail() {
                 {product.category}
               </span>
 
-              <h1 className="text-3xl font-bold text-slate-900">{product.title}</h1>
-              <p className="mt-3 text-sm text-slate-500">{product.brand}</p>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">{product.title}</h1>
+              <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-slate-500">{product.brand}</p>
 
-              <div className="mt-5 flex items-center gap-4">
-                <span className="text-3xl font-bold text-slate-900">${product.price}</span>
-                <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+              <div className="mt-4 sm:mt-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                <span className="text-2xl sm:text-3xl font-bold text-slate-900">${product.price}</span>
+                <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700 w-fit">
                   {product.discountPercentage}% off
                 </span>
               </div>
 
-              <div className="mt-4 flex items-center gap-2 text-sm text-slate-600">
+              <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-slate-600">
                 <span>Rating: {product.rating}</span>
-                <span>•</span>
+                <span className="hidden sm:inline">•</span>
                 <span>{product.stock} in stock</span>
               </div>
 
-              <p className="mt-6 text-base leading-7 text-slate-700">{product.description}</p>
+              <p className="mt-4 sm:mt-6 text-sm sm:text-base leading-6 sm:leading-7 text-slate-700">{product.description}</p>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3">
                 <button
                   type="button"
                   onClick={handleAddToCart}
                   disabled={isCreatingCart || isUpdatingCart}
-                  className="rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full sm:w-auto rounded-lg bg-slate-900 px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isCreatingCart || isUpdatingCart ? 'Adding...' : 'Add to cart'}
                 </button>
@@ -254,7 +254,7 @@ export function ProductDetail() {
                     <button
                       type="button"
                       onClick={() => navigate(`/products/${product.id}/edit`)}
-                      className="rounded-lg border border-sky-300 bg-sky-50 px-4 py-2.5 text-sm font-medium text-sky-700 transition hover:border-sky-400 hover:bg-sky-100"
+                      className="w-full sm:w-auto rounded-lg border border-sky-300 bg-sky-50 px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-medium text-sky-700 transition hover:border-sky-400 hover:bg-sky-100"
                     >
                       Edit Product
                     </button>
@@ -263,7 +263,7 @@ export function ProductDetail() {
                       type="button"
                       onClick={() => setShowDeleteConfirm(true)}
                       disabled={isDeletingProduct}
-                      className="rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-medium text-red-700 transition hover:border-red-300 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60"
+                      className="w-full sm:w-auto rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-medium text-red-700 transition hover:border-red-300 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {isDeletingProduct ? 'Deleting...' : 'Delete Product'}
                     </button>
@@ -274,7 +274,7 @@ export function ProductDetail() {
                   type="button"
                   onClick={toggleCompare}
                   disabled={isCompareLimitReached}
-                  className={`rounded-lg border px-4 py-2.5 text-sm font-medium transition ${
+                  className={`w-full sm:w-auto rounded-lg border px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-medium transition ${
                     isCompared
                       ? 'border-sky-600 bg-sky-100 text-sky-700 hover:bg-sky-200'
                       : isCompareLimitReached
