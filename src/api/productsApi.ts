@@ -104,11 +104,12 @@ export const productsApi = createApi({
             const payload = (await response.json()) as { products?: Product[] }
             const filteredProducts = filterItems(payload.products ?? [])
             const sortedProducts = sortItems(filteredProducts)
-            const paginatedProducts = sortedProducts.slice(skip, skip + limit)
+            console.log(sortedProducts)
+           // const paginatedProducts = sortedProducts.slice(skip, skip + limit)
 
             return {
               data: {
-                products: paginatedProducts,
+                products: sortedProducts,
                 total: filteredProducts.length,
                 skip,
                 limit,
@@ -124,6 +125,7 @@ export const productsApi = createApi({
 
           const payload = (await response.json()) as { products?: Product[]; total?: number }
           const items = payload.products ?? []
+          console.log(items)
           const filteredItems = filterItems(items)
           const sortedItems = sortItems(filteredItems)
 
