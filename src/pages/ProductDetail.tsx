@@ -1,124 +1,160 @@
-import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+"use client";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-import { useDispatch } from 'react-redux'
+import { useDispatch } from "react-redux";
 
-import { SEO } from '../components/SEO'
+import { SEO } from "../components/SEO";
 import {
   getStoredCartId,
   setStoredCartId,
   useCreateCartMutation,
   useGetCartQuery,
   useUpdateCartMutation,
-} from '../api/cartApi'
-import { useDeleteProductMutation, useGetProductByIdQuery } from '../api/productsApi'
-import { useAppSelector } from '../hooks/useAppSelector'
-import { addToCart } from '../store/cartSlice'
-import { addToCompare, removeFromCompare } from '../store/compareSlice'
+} from "../api/cartApi";
+import {
+  useDeleteProductMutation,
+  useGetProductByIdQuery,
+} from "../api/productsApi";
+import { useAppSelector } from "../hooks/useAppSelector";
+// import { addToCart } from '../store/cartSlice'
+// import { addToCompare, removeFromCompare } from '../store/compareSlice'
+// import { addRecentlyViewed } from '../store/recentlyViewSlice'
+import { ProductCard } from "../components/ProductCard";
+import { getProductById } from "../app/Products/action";
+import type { Product } from "../types/product";
+import Link from "next/link";
 
-export function ProductDetail() {
-  const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const productId = Number(id)
-  const user = useAppSelector((state) => state.auth.user)
-  const compareIds = useAppSelector((state) => state.compare.items)
-  const localCartItems = useAppSelector((state) => state.cart.items)
-  const cartId = user?.id ?? getStoredCartId()
-  const { data: product, isLoading, isError } = useGetProductByIdQuery(productId)
-  const { data: cart } = useGetCartQuery(cartId)
-  const [createCart, { isLoading: isCreatingCart }] = useCreateCartMutation()
-  const [updateCart, { isLoading: isUpdatingCart }] = useUpdateCartMutation()
-  const [deleteProduct, { isLoading: isDeletingProduct, isError: isDeleteError, error: deleteError }] = useDeleteProductMutation()
-  const [toastMessage, setToastMessage] = useState<string | null>(null)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+export function ProductDetail({ productId }: { productId: number }) {
+  const user = useAppSelector((state) => state.auth.user);
+  const compareIds = useAppSelector((state) => state.compare.items);
+  const localCartItems = useAppSelector((state) => state.cart.items);
+  const cartId = user?.id ?? getStoredCartId();
+  // const { data: product, isLoading, isError } = useGetProductByIdQuery(productId)
+  const { data: cart } = useGetCartQuery(cartId);
+  const [createCart, { isLoading: isCreatingCart }] = useCreateCartMutation();
+  const [updateCart, { isLoading: isUpdatingCart }] = useUpdateCartMutation();
+  const [
+    deleteProduct,
+    {
+      isLoading: isDeletingProduct,
+      isError: isDeleteError,
+      error: deleteError,
+    },
+  ] = useDeleteProductMutation();
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const recentlyViewed = useAppSelector((state) => state.recentlyViewed.items);
+  // Filter out current product from recently viewed list
+  const otherRecentlyViewed = recentlyViewed.filter((p) => p.id !== productId);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    getProductById(productId)
+      .then(setProduct)
+      .catch(() => setIsError(true))
+      .finally(() => setIsLoading(false));
+  }, [productId]);
 
   useEffect(() => {
     if (!toastMessage) {
-      return undefined
+      return undefined;
     }
-
     const timer = window.setTimeout(() => {
-      setToastMessage(null)
-    }, 1800)
+      setToastMessage(null);
+    }, 1800);
+    return () => window.clearTimeout(timer);
+  }, [toastMessage]);
 
-    return () => window.clearTimeout(timer)
-  }, [toastMessage])
+  // useEffect(() => {
+  //   if (product) {
+  //     dispatch(addRecentlyViewed(product))
+  //   }
+
+  // }, [product, dispatch])
 
   const handleAddToCart = async () => {
     if (!product) {
-      return
+      return;
     }
 
-    const alreadyInCart = localCartItems.some((item) => item.productId === product.id)
-    dispatch(addToCart({ productId: product.id, quantity: 1 }))
+    const alreadyInCart = localCartItems.some(
+      (item) => item.productId === product.id,
+    );
+    //  dispatch(addToCart({ productId: product.id, quantity: 1 }))
 
     try {
       if (cart) {
-        const existingItem = cart.products.find((item) => item.id === product.id)
+        const existingItem = cart.products.find(
+          (item) => item.id === product.id,
+        );
         const nextProducts = existingItem
           ? cart.products.map((item) =>
-              item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item,
+              item.id === product.id
+                ? { ...item, quantity: item.quantity + 1 }
+                : item,
             )
-          : [...cart.products, { id: product.id, quantity: 1 }]
+          : [...cart.products, { id: product.id, quantity: 1 }];
 
         await updateCart({
           id: cart.id,
           products: nextProducts.map(({ id, quantity }) => ({ id, quantity })),
-        }).unwrap()
+        }).unwrap();
 
-        setToastMessage(alreadyInCart ? 'Quantity increased' : 'Added to cart')
-        return
+        setToastMessage(alreadyInCart ? "Quantity increased" : "Added to cart");
+        return;
       }
 
       const createdCart = await createCart({
         userId: user?.id ?? cartId,
         products: [{ id: product.id, quantity: 1 }],
-      }).unwrap()
+      }).unwrap();
 
-      setStoredCartId(createdCart.id)
-      setToastMessage(alreadyInCart ? 'Quantity increased' : 'Added to cart')
+      setStoredCartId(createdCart.id);
+      setToastMessage(alreadyInCart ? "Quantity increased" : "Added to cart");
     } catch (addError) {
-      console.error('Add to cart failed', addError)
-      setToastMessage('Unable to add to cart')
+      console.error("Add to cart failed", addError);
+      setToastMessage("Unable to add to cart");
     }
-  }
+  };
 
   const handleDeleteProduct = async () => {
     if (!product || isDeletingProduct) {
-      return
+      return;
     }
 
     try {
-      await deleteProduct(product.id).unwrap()
-      setShowDeleteConfirm(false)
-      navigate('/products', {
-        replace: true,
-        state: {
-          message:
-            'Product marked as deleted by DummyJSON demo mode. The API simulates deletion and does not permanently remove the product from the server.',
-        },
-      })
+      await deleteProduct(product.id).unwrap();
+      setShowDeleteConfirm(false);
+      // navigate('/products', {
+      //   replace: true,
+      //   state: {
+      //     message:
+      //       'Product marked as deleted by DummyJSON demo mode. The API simulates deletion and does not permanently remove the product from the server.',
+      //   },
+      // })
     } catch (deleteFailure) {
-      console.error('Delete product failed', deleteFailure)
-      setToastMessage('Unable to delete product')
-      setShowDeleteConfirm(false)
+      console.error("Delete product failed", deleteFailure);
+      setToastMessage("Unable to delete product");
+      setShowDeleteConfirm(false);
     }
-  }
+  };
 
-  const isCompared = compareIds.includes(productId)
-  const isCompareLimitReached = compareIds.length >= 3 && !isCompared
+  const isCompared = compareIds.includes(productId);
+  const isCompareLimitReached = compareIds.length >= 3 && !isCompared;
 
   const toggleCompare = () => {
     if (isCompared) {
-      dispatch(removeFromCompare(productId))
-      return
+      //  dispatch(removeFromCompare(productId))
+      return;
     }
 
     if (!isCompareLimitReached) {
-      dispatch(addToCompare(productId))
+      //  dispatch(addToCompare(productId))
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -127,7 +163,7 @@ export function ProductDetail() {
           Loading product...
         </div>
       </div>
-    )
+    );
   }
 
   if (isError || !product) {
@@ -137,7 +173,7 @@ export function ProductDetail() {
           Product could not be loaded.
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -150,7 +186,10 @@ export function ProductDetail() {
       />
 
       <div className="mx-auto max-w-5xl p-4 sm:p-6">
-        <Link to="/products" className="mb-6 inline-block text-xs sm:text-sm font-medium text-sky-600 hover:text-sky-700">
+        <Link
+          href="/products"
+          className="mb-6 inline-block text-xs sm:text-sm font-medium text-sky-600 hover:text-sky-700"
+        >
           ← Back to products
         </Link>
 
@@ -163,14 +202,18 @@ export function ProductDetail() {
         {showDeleteConfirm && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-3 sm:p-4">
             <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-xl">
-              <h2 className="text-lg sm:text-xl font-bold text-slate-900">Delete product?</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-slate-900">
+                Delete product?
+              </h2>
               <p className="mt-3 text-xs sm:text-sm leading-6 text-slate-600">
-                This will simulate a delete request to DummyJSON. The API does not permanently remove the product from its demo dataset.
+                This will simulate a delete request to DummyJSON. The API does
+                not permanently remove the product from its demo dataset.
               </p>
 
               {isDeleteError && (
                 <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-xs sm:text-sm text-red-700">
-                  {(deleteError as { data?: { message?: string } })?.data?.message ?? 'Delete failed.'}
+                  {(deleteError as { data?: { message?: string } })?.data
+                    ?.message ?? "Delete failed."}
                 </div>
               )}
 
@@ -188,7 +231,7 @@ export function ProductDetail() {
                   disabled={isDeletingProduct}
                   className="rounded-lg bg-red-600 px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-medium text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {isDeletingProduct ? 'Deleting...' : 'Delete'}
+                  {isDeletingProduct ? "Deleting..." : "Delete"}
                 </button>
               </div>
             </div>
@@ -221,11 +264,17 @@ export function ProductDetail() {
                 {product.category}
               </span>
 
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">{product.title}</h1>
-              <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-slate-500">{product.brand}</p>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">
+                {product.title}
+              </h1>
+              <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-slate-500">
+                {product.brand}
+              </p>
 
               <div className="mt-4 sm:mt-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                <span className="text-2xl sm:text-3xl font-bold text-slate-900">${product.price}</span>
+                <span className="text-2xl sm:text-3xl font-bold text-slate-900">
+                  ${product.price}
+                </span>
                 <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700 w-fit">
                   {product.discountPercentage}% off
                 </span>
@@ -237,7 +286,9 @@ export function ProductDetail() {
                 <span>{product.stock} in stock</span>
               </div>
 
-              <p className="mt-4 sm:mt-6 text-sm sm:text-base leading-6 sm:leading-7 text-slate-700">{product.description}</p>
+              <p className="mt-4 sm:mt-6 text-sm sm:text-base leading-6 sm:leading-7 text-slate-700">
+                {product.description}
+              </p>
 
               <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3">
                 <button
@@ -246,14 +297,16 @@ export function ProductDetail() {
                   disabled={isCreatingCart || isUpdatingCart}
                   className="w-full sm:w-auto rounded-lg bg-slate-900 px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {isCreatingCart || isUpdatingCart ? 'Adding...' : 'Add to cart'}
+                  {isCreatingCart || isUpdatingCart
+                    ? "Adding..."
+                    : "Add to cart"}
                 </button>
 
                 {user && (
                   <>
                     <button
                       type="button"
-                      onClick={() => navigate(`/products/${product.id}/edit`)}
+                      // onClick={() => navigate(`/products/${product.id}/edit`)}
                       className="w-full sm:w-auto rounded-lg border border-sky-300 bg-sky-50 px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-medium text-sky-700 transition hover:border-sky-400 hover:bg-sky-100"
                     >
                       Edit Product
@@ -265,7 +318,7 @@ export function ProductDetail() {
                       disabled={isDeletingProduct}
                       className="w-full sm:w-auto rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-medium text-red-700 transition hover:border-red-300 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                      {isDeletingProduct ? 'Deleting...' : 'Delete Product'}
+                      {isDeletingProduct ? "Deleting..." : "Delete Product"}
                     </button>
                   </>
                 )}
@@ -276,19 +329,42 @@ export function ProductDetail() {
                   disabled={isCompareLimitReached}
                   className={`w-full sm:w-auto rounded-lg border px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-medium transition ${
                     isCompared
-                      ? 'border-sky-600 bg-sky-100 text-sky-700 hover:bg-sky-200'
+                      ? "border-sky-600 bg-sky-100 text-sky-700 hover:bg-sky-200"
                       : isCompareLimitReached
-                        ? 'cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400'
-                        : 'border-slate-300 bg-white text-slate-700 hover:border-slate-400'
+                        ? "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400"
+                        : "border-slate-300 bg-white text-slate-700 hover:border-slate-400"
                   }`}
                 >
-                  {isCompared ? 'Remove from compare' : isCompareLimitReached ? 'Compare limit reached' : 'Compare'}
+                  {isCompared
+                    ? "Remove from compare"
+                    : isCompareLimitReached
+                      ? "Compare limit reached"
+                      : "Compare"}
                 </button>
               </div>
             </div>
           </div>
         </article>
+
+        {/* Show other recently viewed products */}
+        {otherRecentlyViewed.length > 0 && (
+          <section className="mt-8 border-t pt-6">
+            <h3 className="mb-4 text-xl font-bold">You Also Viewed</h3>
+            <div
+              className="
+            flex overflow-x-auto space-x-4
+            scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200
+            snap-x snap-mandatory
+            p-4 rounded-lg bg-white shadow
+            "
+            >
+              {otherRecentlyViewed.map((prod) => (
+                <ProductCard key={prod.id} product={prod} />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </>
-  )
+  );
 }

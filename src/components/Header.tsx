@@ -1,9 +1,11 @@
+'use client'
 import { useEffect, useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+// import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
 import { useAppSelector } from '../hooks/useAppSelector'
 import { logout } from '../store/authSlice'
+import Link from 'next/link'
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   `text-xs sm:text-sm font-medium transition ${
@@ -11,7 +13,7 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   }`
 
 export function Header() {
-  const navigate = useNavigate()
+ // const navigate = useNavigate()
   const dispatch = useDispatch()
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
   const user = useAppSelector((state) => state.auth.user)
@@ -40,16 +42,16 @@ export function Header() {
 
   const handleLogout = () => {
     dispatch(logout())
-    navigate('/login', { replace: true })
+   // navigate('/login', { replace: true })
   }
 
   return (
     <header className="border-b border-[var(--border-color)] bg-[var(--panel-bg)] transition-colors duration-200">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
         {/* Logo - Always visible */}
-        <NavLink to="/products" className="text-lg sm:text-xl font-semibold text-[var(--text-color)]">
+        <Link href="/products" className="text-lg sm:text-xl font-semibold text-[var(--text-color)]">
           EcommPOC
-        </NavLink>
+        </Link>
 
         {/* Hamburger Button - Only on Mobile (md:hidden) */}
         <button
@@ -62,10 +64,10 @@ export function Header() {
 
         {/* Desktop Navigation - Hidden on Mobile, shown on md+ */}
         <nav className="hidden md:flex items-center gap-3 lg:gap-4 text-xs sm:text-sm text-[var(--muted-color)]">
-          <NavLink to="/products" className={navLinkClass}>
+          <Link href="/products">
             Products
-          </NavLink>
-          <NavLink to="/cart" className={navLinkClass}>
+          </Link>
+          <Link href="/cart">
             <span className="inline-flex items-center gap-2">
               Cart
               {cartCount > 0 && (
@@ -74,10 +76,10 @@ export function Header() {
                 </span>
               )}
             </span>
-          </NavLink>
-          <NavLink to="/compare" className={navLinkClass}>
+          </Link>
+          <Link href="/compare">
             Compare
-          </NavLink>
+          </Link>
 
           <button
             type="button"
@@ -103,9 +105,9 @@ export function Header() {
               </button>
             </>
           ) : (
-            <NavLink to="/login" className={navLinkClass}>
+            <Link href="/login">
               Login
-            </NavLink>
+            </Link>
           )}
         </nav>
       </div>
@@ -113,25 +115,25 @@ export function Header() {
       {/* Mobile Menu - Collapsible drawer (md:hidden) */}
       {isMenuOpen && (
         <div className="md:hidden border-t border-[var(--border-color)] bg-[var(--panel-bg)] px-4 py-4 space-y-3">
-          <NavLink
-            to="/products"
-            className={({ isActive }) =>
-              `block py-2 text-sm font-medium transition ${
-                isActive ? 'text-[var(--text-color)]' : 'text-[var(--muted-color)] hover:text-[var(--text-color)]'
-              }`
-            }
+          <Link
+            href="/products"
+            // className={({ isActive }) =>
+            //   `block py-2 text-sm font-medium transition ${
+            //     isActive ? 'text-[var(--text-color)]' : 'text-[var(--muted-color)] hover:text-[var(--text-color)]'
+            //   }`
+            // }
             onClick={() => setIsMenuOpen(false)}
           >
             Products
-          </NavLink>
+          </Link>
 
-          <NavLink
-            to="/cart"
-            className={({ isActive }) =>
-              `flex items-center gap-2 py-2 text-sm font-medium transition ${
-                isActive ? 'text-[var(--text-color)]' : 'text-[var(--muted-color)] hover:text-[var(--text-color)]'
-              }`
-            }
+          <Link
+            href="/cart"
+            // className={({ isActive }) =>
+            //   `flex items-center gap-2 py-2 text-sm font-medium transition ${
+            //     isActive ? 'text-[var(--text-color)]' : 'text-[var(--muted-color)] hover:text-[var(--text-color)]'
+            //   }`
+            // }
             onClick={() => setIsMenuOpen(false)}
           >
             Cart
@@ -140,19 +142,19 @@ export function Header() {
                 {cartCount}
               </span>
             )}
-          </NavLink>
+          </Link>
 
-          <NavLink
-            to="/compare"
-            className={({ isActive }) =>
-              `block py-2 text-sm font-medium transition ${
-                isActive ? 'text-[var(--text-color)]' : 'text-[var(--muted-color)] hover:text-[var(--text-color)]'
-              }`
-            }
+          <Link
+            href="/compare"
+            // className={({ isActive }) =>
+            //   `block py-2 text-sm font-medium transition ${
+            //     isActive ? 'text-[var(--text-color)]' : 'text-[var(--muted-color)] hover:text-[var(--text-color)]'
+            //   }`
+            // }
             onClick={() => setIsMenuOpen(false)}
           >
             Compare
-          </NavLink>
+          </Link>
 
           <div className="border-t border-[var(--border-color)] pt-3 mt-3 space-y-3">
             <button
@@ -176,7 +178,7 @@ export function Header() {
                   type="button"
                   onClick={() => {
                     dispatch(logout())
-                    navigate('/login', { replace: true })
+                   // navigate('/login', { replace: true })
                     setIsMenuOpen(false)
                   }}
                   className="w-full rounded-lg border border-[var(--border-color)] bg-[var(--panel-alt)] px-3 py-2 font-medium text-[var(--text-color)] transition hover:border-sky-400 hover:text-sky-600 text-sm"
@@ -185,13 +187,13 @@ export function Header() {
                 </button>
               </>
             ) : (
-              <NavLink
-                to="/login"
+              <Link
+                href="/login"
                 className="block py-2 text-sm font-medium text-[var(--muted-color)] hover:text-[var(--text-color)] transition"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Login
-              </NavLink>
+              </Link>
             )}
           </div>
         </div>

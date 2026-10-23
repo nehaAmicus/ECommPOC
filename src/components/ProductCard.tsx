@@ -1,24 +1,40 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+// import { useMemo } from 'react'
 
 import { useCreateCartMutation } from '../api/cartApi'
 import { useAppSelector } from '../hooks/useAppSelector'
 import { addToCart } from '../store/cartSlice'
 import { addToCompare, removeFromCompare } from '../store/compareSlice'
 import type { Product } from '../types'
+import React from 'react'
+import type { RootState } from '../store/store'
 
 interface ProductCardProps {
   product: Product
   onAddToCart?: (productId: number, alreadyInCart: boolean) => void
 }
 
-export function ProductCard({ product, onAddToCart }: ProductCardProps) {
+export const ProductCard = React.memo(function ProductCard({ 
+  product, 
+  onAddToCart 
+}: ProductCardProps) {
   const dispatch = useDispatch()
   const user = useAppSelector((state) => state.auth.user)
   const selectedIds = useAppSelector((state) => state.compare.items)
-  const localCartItems = useAppSelector((state) => state.cart.items)
   const [createCart] = useCreateCartMutation()
+
+  // ✅ Memoized selector - only re-renders if THIS product's cart status changes
+  const isInCart = useSelector(
+    (state: RootState) => 
+      state.cart.items.some((item) => item.productId === product.id),
+    // Custom equality check
+    (a, b) => a === b
+  )
+
   const isSelected = selectedIds.includes(product.id)
   const isMaxReached = selectedIds.length >= 3 && !isSelected
+
+  console.log("🔥 ACTUAL ProductCard RENDER:", product.id)
 
   const toggleCompare = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
@@ -34,23 +50,23 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
     }
   }
 
-  const handleAddToCart = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-    event.stopPropagation()
+  const handleAddToCart = 
+    async (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault()
+      event.stopPropagation()
 
-    const alreadyInCart = localCartItems.some((item) => item.productId === product.id)
-    dispatch(addToCart({ productId: product.id, quantity: 1 }))
-    onAddToCart?.(product.id, alreadyInCart)
+      dispatch(addToCart({ productId: product.id, quantity: 1 }))
+      onAddToCart?.(product.id, isInCart)
 
-    try {
-      await createCart({
-        userId: user?.id ?? 1,
-        products: [{ id: product.id, quantity: 1 }],
-      }).unwrap()
-    } catch (error) {
-      console.error('Add to cart failed', error)
+      try {
+        await createCart({
+          userId: user?.id ?? 1,
+          products: [{ id: product.id, quantity: 1 }],
+        }).unwrap()
+      } catch (error) {
+        console.error('Add to cart failed', error)
+      }
     }
-  }
 
   return (
     <article className="flex flex-col rounded-lg border border-slate-200 bg-white p-3 sm:p-4 shadow-sm hover:shadow-md transition">
@@ -73,6 +89,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         >
           {isSelected ? 'Selected' : isMaxReached ? 'Max 3' : 'Compare'}
         </button>
+      
       </div>
 
       <img src={product.thumbnail} alt={product.title} className="mt-3 sm:mt-4 aspect-square w-full rounded-md object-cover" />
@@ -98,4 +115,21 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
       </div>
     </article>
   )
-}
+  
+},
+//  (prevProps, nextProps) => {
+//     const sameProduct =
+//       prevProps.product === nextProps.product;
+
+//     const sameCallback =
+//       prevProps.onAddToCart === nextProps.onAddToCart;
+
+//     console.log(
+//       `Card ${nextProps.product.id}:`,
+//       "product:", sameProduct,
+//       "callback:", sameCallback
+//     );
+
+//     return sameProduct && sameCallback;
+//   }
+);
